@@ -34,34 +34,69 @@
 #define IMAGE_LOAD_ERR_TITLE	TEXT("画像読み込みエラー")
 
 //#define IMAGE_BACK_PATH TEXT(".\\IMAGE\\LavaCave.png")  //プレイ画面の背景
+#define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\basya-mo2.png")
 
 #define IMAGE_TITLE_BK_PATH TEXT(".\\IMAGE\\Universe.png")
-#define IMAGE_TITLE_ROGO_PATH TEXT(".\\IMAGE\\mygame_logo.png")
+#define IMAGE_TITLE_ROGO_PATH TEXT(".\\IMAGE\\MyGameLogo.png")
 #define IMAGE_TITLE_ROGO_ROTA 0.005
-#define IMAGE_TITLE_ROGO_ROTA_MAX 1.0
+#define IMAGE_TITLE_ROGO_ROTA_MAX 1.1
 #define IMAGE_TITLE_ROGO_X_SPEED 1
 #define IMAGE_TITLE_START_PATH TEXT(".\\IMAGE\\title_start.png")
 #define IMAGE_TITLE_START_CNT 1
 #define IMAGE_TITLE_START_CNT_MAX 30
 
-#define IMAGE_END_COMP_PATH    TEXT(".\\IMAGE\\mission_complete.png")
+#define IMAGE_END_COMP_PATH    TEXT(".\\IMAGE\\MyGameClear.png")
 #define IMAGE_END_COMP_CNT     1
 #define IMAGE_END_COMP_CNT_MAX 30
 
-#define IMAGE_END_FAIL_PATH    TEXT(".\\IMAGE\\mission_failed.png")
+#define IMAGE_END_FAIL_PATH    TEXT(".\\IMAGE\\MyGameOver.png")
 #define IMAGE_END_FAIL_CNT     1
 #define IMAGE_END_FAIL_CNT_MAX 30
 
 //エラーメッセージ
 #define MUSIC_LOAD_ERR_TITLE	TEXT("音楽読み込みエラー")
 
+#define MUSIC_BGM_PATH  TEXT(".\\MUSIC\\seru_BGM.mp3")
+
 #define MUSIC_BGM_TITLE_PATH  TEXT(".\\MUSIC\\newop.mp3")
 #define MUSIC_BGM_COMP_PATH   TEXT(".\\MUSIC\\newed.mp3")
 #define MUSIC_BGM_FAIL_PATH   TEXT(".\\MUSIC\\owaowari.mp3")
 
+#define GAME_MAP_TATE_MAX 9
+#define GAME_MAP_YOKO_MAX 13
+#define GAME_MAP_KIND_MAX 2
+
+#define GAME_MAP_PATH   TEXT(".\\IMAGE\\MAP\\map.png")
+
+#define MAP_DIV_WIDTH 64
+#define MAP_DIV_HEIGHT 64
+#define MAP_DIV_TATE 10
+#define MAP_DIV_YOKO 4
+#define MAP_DIV_NUM MAP_DIV_TATE * MAP_DIV_YOKO
+
 //閉じるボタンを押したとき
 #define MSG_CLOSE_TITLE			TEXT("終了メッセージ")
 #define MSG_CLOSE_CAPTION		TEXT("ゲームを終了しますか？")
+
+#define START_ERR_TITLE  TEXT("スタート位置エラー")
+#define START_ERR_CAPTION  TEXT("スタート位置が決まっていません")
+
+#define GOAL_ERR_TITLE TEXT("ゴール位置エラー")
+#define GOAL_ERR_CAPTION TEXT("ゴール位置が決まっていません")
+
+#define MOUSE_R_CLICK_TITLE  TEXT("ゲーム中断")
+#define MOUSE_R_CLICK_CAPTION  TEXT("ゲームを中断し、タイトル画面に戻りますか？")
+
+enum GAME_MAP_KIND
+{
+	n = -1,
+	k = 4,
+	t = 9,
+	s = 8,
+	g = 7,
+	a = -2,
+	z = -3
+};
 
 enum GAME_SCENE {
 	GAME_SCENE_START,
@@ -160,6 +195,8 @@ typedef struct STRUCT_CHARA
 {
 	IMAGE image;				//IMAGE構造体
 	int speed;					//速さ
+	int CenterX;
+	int CenterY;
 
 	RECT coll;					//当たり判定
 	iPOINT collBeforePt;		//当たる前の座標
@@ -189,7 +226,7 @@ typedef struct STRUCT_IMAGE_BLINK
 	BOOL IsDraw;
 }IMAGE_BLINK;
 
-/*typedef struct STRUCT_MAP_IMAGE
+typedef struct STRUCT_MAP_IMAGE
 {
 	char path[PATH_MAX];
 	int handle[MAP_DIV_NUM];
@@ -197,16 +234,16 @@ typedef struct STRUCT_IMAGE_BLINK
 	int width;
 	int height;
 
-}MAPCHIP;*/
+}MAPCHIP;
 
-/*typedef struct STRUCT_MAP
+typedef struct STRUCT_MAP
 {
 	GAME_MAP_KIND kind;
 	int x;
 	int y;
 	int width;
 	int height;
-}MAP;*/
+}MAP;
 
 //########## グローバル変数 ##########
 //FPS関連
@@ -251,6 +288,29 @@ MUSIC BGM_TITLE;
 MUSIC BGM_COMP;
 MUSIC BGM_FAIL;
 
+GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
+		// 0 1 2 3 4 5 6 7 8 9 0 1 2
+		   k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //1
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //2
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //3
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //4
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //5
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //6
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //7
+		   k,k,k,k,k,k,k,k,k,k,k,k,k,
+};
+
+GAME_MAP_KIND mapDataInit[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+MAPCHIP mapChip;
+
+MAP map[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+iPOINT startPt{ -1,-1 };
+
+RECT mapColl[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
 //########## プロトタイプ宣言 ##########
 VOID MY_FPS_UPDATE(VOID);			//FPS値を計測、更新する
 VOID MY_FPS_DRAW(VOID);				//FPS値を描画する
@@ -290,6 +350,9 @@ VOID MY_DELETE_IMAGE(VOID);		//画像をまとめて削除する関数
 BOOL MY_LOAD_MUSIC(VOID);		//音楽をまとめて読み込む関数
 VOID MY_DELETE_MUSIC(VOID);		//音楽をまとめて削除する関数
 
+BOOL MY_CHECK_MAP1_PLAYER_COLL(RECT);
+BOOL MY_CHECK_RECT_COLL(RECT, RECT);
+
 //########## プログラムで最初に実行される関数 ##########
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -319,6 +382,38 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	GameScene = GAME_SCENE_START;	//ゲームシーンはスタート画面から
 	SetDrawScreen(DX_SCREEN_BACK);	//Draw系関数は裏画面に描画
 
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			if (mapData[tate][yoko] == s)
+			{
+				startPt.x = mapChip.width * yoko + mapChip.width / 2;
+				startPt.y = mapChip.height * tate + mapChip.height / 2;
+			}
+
+			if (mapData[tate][yoko] == g)
+			{
+				GoalRect.left = mapChip.width * yoko;
+				GoalRect.top = mapChip.height * tate;
+				GoalRect.right = mapChip.width * (yoko + 1);
+				GoalRect.bottom = mapChip.height * (tate + 1);
+			}
+		}
+	}
+
+	/*if (startPt.x == -1 && startPt.y == -1)
+	{
+		MessageBox(GetMainWindowHandle(), START_ERR_CAPTION, START_ERR_TITLE, MB_OK);
+		return -1;
+	}
+
+	if (GoalRect.left == -1)
+	{
+		MessageBox(GetMainWindowHandle(), GOAL_ERR_CAPTION, GOAL_ERR_TITLE, MB_OK);
+		return -1;
+	}*/
+
 	//無限ループ
 	while (TRUE)
 	{
@@ -328,6 +423,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//画面の閉じるボタンを押されたとき
 		if (GetWindowUserCloseFlag(TRUE))
 		{
+			if (CheckSoundMem(BGM_TITLE.handle) != 0)
+			{
+				StopSoundMem(BGM_TITLE.handle);
+			}
+
 			//終了ダイアログを表示
 			int Ret = MessageBox(GetMainWindowHandle(), MSG_CLOSE_CAPTION, MSG_CLOSE_TITLE, MB_YESNO | MB_ICONASTERISK);
 			if (Ret == IDYES) { break; }	//YESなら、ゲームを中断する
@@ -633,12 +733,34 @@ VOID MY_START(VOID)
 //スタート画面の処理
 VOID MY_START_PROC(VOID)
 {
+	if (CheckSoundMem(BGM_TITLE.handle) == 0)
+	{
+		ChangeVolumeSoundMem(255 * 50 / 100, BGM_TITLE.handle);
+		PlaySoundMem(BGM_TITLE.handle, DX_PLAYTYPE_LOOP);
+	}
+
 	//エンターキーを押したら、プレイシーンへ移動する
 	if (MY_KEY_DOWN(KEY_INPUT_RETURN) == TRUE)
 	{
+		if (CheckSoundMem(BGM_TITLE.handle) != 0)
+		{
+			StopSoundMem(BGM_TITLE.handle);
+		}
+
 		MY_PLAY_INIT();	//ゲーム初期化
 
 		SetMouseDispFlag(FALSE);
+
+		player.CenterX = startPt.x;
+		player.CenterY = startPt.y;
+
+		player.image.x = 690;
+		player.image.y = 430;
+
+		player.collBeforePt.x = player.CenterX;
+		player.collBeforePt.y = player.CenterY;
+
+		SetMousePoint(player.image.x, player.image.y);
 
 		GameEndKind = GAME_END_FAIL;
 
@@ -714,9 +836,107 @@ VOID MY_PLAY(VOID)
 //プレイ画面の処理
 VOID MY_PLAY_PROC(VOID)
 {
+	if (CheckSoundMem(BGM.handle) == 0)
+	{
+		ChangeVolumeSoundMem(255 * 80 / 100, BGM.handle);
+
+		PlaySoundMem(BGM.handle, DX_PLAYTYPE_LOOP);
+	}
+
+	if (MY_KEY_DOWN(KEY_INPUT_UP) == TRUE) {
+		if (player.image.y > 0)
+		{
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 70))
+			{
+
+			}
+			else {
+				player.image.y--;
+			}
+		}
+	}
+
+	if (MY_KEY_DOWN(KEY_INPUT_DOWN) == TRUE) {
+		if (player.image.y < 520)
+		{
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 446 && player.image.y < 520))
+			{
+
+			}
+			else {
+				player.image.y++;
+			}
+		}
+	}
+
+	if (MY_KEY_DOWN(KEY_INPUT_LEFT) == TRUE) {
+		if (player.image.x > 41)
+		{
+			player.image.x--;
+			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 70))
+			{
+
+			}
+			else {
+				player.image.x--;
+			}*/
+		}
+	}
+
+	if (MY_KEY_DOWN(KEY_INPUT_RIGHT) == TRUE) {
+		if (player.image.x < 698)
+		{
+			player.image.x++;
+			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 70))
+			{
+
+			}
+			else {
+				player.image.y--;
+			}*/
+		}
+	}
+
+	if (mouse.Button[MOUSE_INPUT_RIGHT] == TRUE)
+	{
+		iPOINT R_ClickPt = mouse.Point;
+
+		SetMouseDispFlag(TRUE);
+
+		int Ret = MessageBox(GetMainWindowHandle(), MOUSE_R_CLICK_CAPTION, MOUSE_R_CLICK_TITLE, MB_YESNO);
+
+		if (Ret == IDYES)
+		{
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
+
+			SetMouseDispFlag(TRUE);
+
+			GameScene = GAME_SCENE_START;
+			return;
+		}
+		else if (Ret == IDNO)
+		{
+			SetMousePoint(R_ClickPt.x, R_ClickPt.y);
+
+			SetMouseDispFlag(FALSE);
+		}
+	}
+
 	//スペースキーを押したら、エンドシーンへ移動する
 	if (MY_KEY_DOWN(KEY_INPUT_SPACE) == TRUE)
 	{
+		if (CheckSoundMem(BGM.handle) != 0)
+		{
+			StopSoundMem(BGM.handle);
+		}
+
 		//ゲームのシーンをエンド画面にする
 		GameScene = GAME_SCENE_END;
 
@@ -729,6 +949,20 @@ VOID MY_PLAY_PROC(VOID)
 //プレイ画面の描画
 VOID MY_PLAY_DRAW(VOID)
 {
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			DrawGraph(
+				map[tate][yoko].x,
+				map[tate][yoko].y,
+				mapChip.handle[map[tate][yoko].kind],
+				TRUE);
+		}
+	}
+
+	//プレイヤーの描画
+	DrawGraph(player.image.x, player.image.y, player.image.handle, TRUE);
 
 	return;
 }
@@ -749,6 +983,12 @@ VOID MY_END_PROC(VOID)
 	//エスケープキーを押したら、スタートシーンへ移動する
 	if (MY_KEY_DOWN(KEY_INPUT_ESCAPE) == TRUE)
 	{
+		//プレイ画面のBGMを止める
+		if (CheckSoundMem(BGM.handle) != 0)
+		{
+			StopSoundMem(BGM.handle);
+		}
+
 		GameScene = GAME_SCENE_START;
 	}
 
@@ -868,7 +1108,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	ImageBack[3].image.x = GAME_WIDTH / 2 - ImageBack[3].image.width / 2;
 	ImageBack[3].image.y = 0 - ImageBack[3].image.height * 3;
 	ImageBack[3].IsDraw = FALSE;
-
+	*/
 	strcpy_s(player.image.path, IMAGE_PLAYER_PATH);
 	player.image.handle = LoadGraph(player.image.path);
 	if (player.image.handle == -1)
@@ -882,7 +1122,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	player.CenterX = player.image.x + player.image.width / 2;
 	player.CenterY = player.image.y + player.image.height / 2;
 	player.speed = CHARA_SPEED_LOW;
-
+	/*
 	int tamaRedRes = LoadDivGraph(
 		TAMA_RED_PATH,
 		TAMA_DIV_NUM, TAMA_DIV_TATE, TAMA_DIV_YOKO,
@@ -923,7 +1163,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 		player.tama[cnt].nowImageKind = 0;
 
 		player.tama[cnt].speed = CHARA_SPEED_LOW;
-	}
+	}*/
 
 	int mapRes = LoadDivGraph(
 		GAME_MAP_PATH,
@@ -938,8 +1178,8 @@ BOOL MY_LOAD_IMAGE(VOID)
 	}
 
 	GetGraphSize(mapChip.handle[0], &mapChip.width, &mapChip.height);
-	*/
-	/*for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
 	{
 
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
@@ -954,9 +1194,9 @@ BOOL MY_LOAD_IMAGE(VOID)
 			map[tate][yoko].x = yoko * map[tate][yoko].width;
 			map[tate][yoko].y = tate * map[tate][yoko].height;
 		}
-	}*/
+	}
 
-	/*for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
 	{
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
@@ -965,7 +1205,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 			mapColl[tate][yoko].right = (yoko + 1) * mapChip.width - 1;
 			mapColl[tate][yoko].bottom = (tate + 1) * mapChip.height - 1;
 		}
-	}*/
+	}
 
 	return TRUE;
 }
@@ -997,7 +1237,14 @@ VOID MY_DELETE_IMAGE(VOID)
 //音楽をまとめて読み込む関数
 BOOL MY_LOAD_MUSIC(VOID)
 {
-
+	//プレイ画面の音楽
+	strcpy_s(BGM.path, MUSIC_BGM_PATH);
+	BGM.handle = LoadSoundMem(BGM.path);
+	if (BGM.handle == -1)
+	{
+		MessageBox(GetMainWindowHandle(), MUSIC_BGM_PATH, MUSIC_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
 
 	//タイトル画面の音楽
 	strcpy_s(BGM_TITLE.path, MUSIC_BGM_TITLE_PATH);		//パスの設定
@@ -1026,4 +1273,34 @@ VOID MY_DELETE_MUSIC(VOID)
 	//DeleteSoundMem(ShinkaHandle);
 
 	return;
+}
+
+
+BOOL MY_CHECK_MAP1_PLAYER_COLL(RECT player)
+{
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			if (MY_CHECK_RECT_COLL(player, mapColl[tate][yoko]) == TRUE)
+			{
+				if (map[tate][yoko].kind == k) { return TRUE; }
+			}
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL MY_CHECK_RECT_COLL(RECT a, RECT b)
+{
+	if (a.left < b.right &&
+		a.top < b.bottom &&
+		a.right > b.left &&
+		a.bottom > b.top)
+	{
+		return TRUE;
+	}
+
+	return FALSE;
 }
