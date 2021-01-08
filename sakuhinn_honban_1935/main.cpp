@@ -35,7 +35,7 @@
 
 //#define IMAGE_BACK_PATH TEXT(".\\IMAGE\\LavaCave.png")  //プレイ画面の背景
 #define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\basya-mo2.png")
-#define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\chusei_heishi_tetsukabuto.png")
+#define IMAGE_ENEMY_PATH TEXT(".\\IMAGE\\enemy_stage1.png")
 
 #define IMAGE_TITLE_BK_PATH TEXT(".\\IMAGE\\Universe.png")
 #define IMAGE_TITLE_ROGO_PATH TEXT(".\\IMAGE\\MyGameLogo.png")
@@ -280,6 +280,7 @@ IMAGE_BLINK ImageEndFAIL;
 
 //プレイヤー関連
 CHARA player;		//ゲームのキャラ
+CHARA enemy;
 
 MUSIC BGM;
 TITLE Title;
@@ -293,11 +294,11 @@ GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		// 0 1 2 3 4 5 6 7 8 9 0 1 2
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
 		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //1
-		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //2
-		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //3
-		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //4
-		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //5
-		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //6
+		   k,t,k,k,k,k,k,k,k,k,k,t,k,  //2
+		   k,t,k,k,k,k,k,k,k,k,k,t,k,  //3
+		   k,t,k,k,k,k,k,k,k,k,k,t,k,  //4
+		   k,t,k,k,k,k,k,k,k,k,k,t,k,  //5
+		   k,t,k,k,k,k,k,k,k,k,k,t,k,  //6
 		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //7
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,
 };
@@ -761,6 +762,10 @@ VOID MY_START_PROC(VOID)
 		player.collBeforePt.x = player.CenterX;
 		player.collBeforePt.y = player.CenterY;
 
+		enemy.image.x = 42;
+		enemy.image.y = 60;
+
+
 		SetMousePoint(player.image.x, player.image.y);
 
 		GameEndKind = GAME_END_FAIL;
@@ -965,6 +970,9 @@ VOID MY_PLAY_DRAW(VOID)
 	//プレイヤーの描画
 	DrawGraph(player.image.x, player.image.y, player.image.handle, TRUE);
 
+	//敵の描画
+	DrawGraph(enemy.image.x, enemy.image.y, enemy.image.handle, TRUE);
+
 	return;
 }
 
@@ -1110,6 +1118,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	ImageBack[3].image.y = 0 - ImageBack[3].image.height * 3;
 	ImageBack[3].IsDraw = FALSE;
 	*/
+
 	strcpy_s(player.image.path, IMAGE_PLAYER_PATH);
 	player.image.handle = LoadGraph(player.image.path);
 	if (player.image.handle == -1)
@@ -1123,6 +1132,23 @@ BOOL MY_LOAD_IMAGE(VOID)
 	player.CenterX = player.image.x + player.image.width / 2;
 	player.CenterY = player.image.y + player.image.height / 2;
 	player.speed = CHARA_SPEED_LOW;
+
+	
+	strcpy_s(enemy.image.path, IMAGE_ENEMY_PATH);
+	enemy.image.handle = LoadGraph(enemy.image.path);
+	if (enemy.image.handle == -1)
+	{
+		MessageBox(GetMainWindowHandle(), IMAGE_ENEMY_PATH, IMAGE_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
+	GetGraphSize(enemy.image.handle, &enemy.image.width, &enemy.image.height);
+	enemy.image.x = GAME_WIDTH / 2 - enemy.image.width / 2;
+	enemy.image.y = GAME_HEIGHT / 2 - enemy.image.height / 2;
+	enemy.CenterX = enemy.image.x + enemy.image.width / 2;
+	enemy.CenterY = enemy.image.y + enemy.image.height / 2;
+	enemy.speed = CHARA_SPEED_LOW;
+	
+
 	/*
 	int tamaRedRes = LoadDivGraph(
 		TAMA_RED_PATH,
