@@ -35,6 +35,7 @@
 
 //#define IMAGE_BACK_PATH TEXT(".\\IMAGE\\LavaCave.png")  //ƒvƒŒƒC‰æ–Ê‚Ì”wŒi
 #define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\basya-mo2.png")
+#define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\chusei_heishi_tetsukabuto.png")
 
 #define IMAGE_TITLE_BK_PATH TEXT(".\\IMAGE\\Universe.png")
 #define IMAGE_TITLE_ROGO_PATH TEXT(".\\IMAGE\\MyGameLogo.png")
