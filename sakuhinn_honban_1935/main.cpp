@@ -113,7 +113,8 @@ enum GAME_END {
 enum CHARA_SPEED {
 	CHARA_SPEED_LOW = 1,
 	CHARA_SPEED_MIDI = 2,
-	CHARA_SPEED_HIGH = 3
+	CHARA_SPEED_HIGH = 3,
+	CHARA_SPEED_MAX = 4
 };
 
 enum CHARA_RELOAD {
@@ -280,7 +281,9 @@ IMAGE_BLINK ImageEndFAIL;
 
 //プレイヤー関連
 CHARA player;		//ゲームのキャラ
-CHARA enemy;
+CHARA enemy;		//敵キャラ
+CHARA breakplayer;	//プレイヤー抜け出すよう
+CHARA breakenemy;	//敵キャラ抜け出すよう
 
 MUSIC BGM;
 TITLE Title;
@@ -857,8 +860,14 @@ VOID MY_PLAY_PROC(VOID)
 			{
 
 			}
+			else if ((player.image.x > 73 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 426))
+			{
+
+			}
 			else {
 				player.image.y--;
+				breakplayer.image.y = player.image.y;
 			}
 		}
 	}
@@ -871,16 +880,28 @@ VOID MY_PLAY_PROC(VOID)
 			{
 
 			}
+			else if ((player.image.x > 73 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 426))
+			{
+
+			}
 			else {
 				player.image.y++;
+				breakplayer.image.y = player.image.y;
 			}
 		}
 	}
 
 	if (MY_KEY_DOWN(KEY_INPUT_LEFT) == TRUE) {
-		if (player.image.x > 41)
+		if ((player.image.x > 73 && player.image.x < 643) &&
+			(player.image.y > 83 && player.image.y < 426))
+		{
+
+		}
+		else if (player.image.x > 41)
 		{
 			player.image.x--;
+			breakplayer.image.x = player.image.x;
 			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 0 && player.image.y < 70))
 			{
@@ -893,9 +914,15 @@ VOID MY_PLAY_PROC(VOID)
 	}
 
 	if (MY_KEY_DOWN(KEY_INPUT_RIGHT) == TRUE) {
-		if (player.image.x < 698)
+		if ((player.image.x > 73 && player.image.x < 643) &&
+			(player.image.y > 83 && player.image.y < 426))
+		{
+
+		}
+		else if (player.image.x < 698)
 		{
 			player.image.x++;
+			breakplayer.image.x = player.image.x;
 			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 0 && player.image.y < 70))
 			{
@@ -906,6 +933,140 @@ VOID MY_PLAY_PROC(VOID)
 			}*/
 		}
 	}
+
+	if (enemy.image.x <= player.image.x)
+	{
+		if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+			(enemy.image.y > 83 && enemy.image.y < 426))
+		{
+			enemy.image.x = breakenemy.image.x;
+		}
+		else if (enemy.image.x == player.image.x)
+		{
+			if (enemy.image.y < player.image.y)
+			{
+				enemy.image.y++;
+				breakenemy.image.y = enemy.image.y;
+			}
+			else if (enemy.image.y > player.image.y)
+			{
+				enemy.image.y--;
+				breakenemy.image.y = enemy.image.y;
+			}
+		}
+		else if (enemy.image.x < 698)
+		{
+			enemy.image.x++;
+			breakenemy.image.x = enemy.image.x;
+			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 70))
+			{
+
+			}
+			else {
+				player.image.y--;
+			}*/
+		}
+	}
+
+	if (enemy.image.x >= player.image.x)
+	{
+		if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+			(enemy.image.y > 83 && enemy.image.y < 426))
+		{
+			enemy.image.x = breakenemy.image.x;
+		}
+		else if (enemy.image.x == player.image.x)
+		{
+			if (enemy.image.y > player.image.y)
+			{
+				enemy.image.y--;
+				breakenemy.image.y = enemy.image.y;
+			}
+			else if (enemy.image.y < player.image.y)
+			{
+				enemy.image.y++;
+				breakenemy.image.y = enemy.image.y;
+			}
+		}
+		else if (enemy.image.x < 698)
+		{
+			enemy.image.x--;
+			breakenemy.image.x = enemy.image.x;
+			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 70))
+			{
+
+			}
+			else {
+				player.image.y--;
+			}*/
+		}
+	}
+
+	if (enemy.image.y >= player.image.y)
+	{
+		if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+			(enemy.image.y > 0 && enemy.image.y < 70))
+		{
+			enemy.image.y = breakenemy.image.y;
+		}
+		else if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+			(enemy.image.y > 83 && enemy.image.y < 426))
+		{
+			enemy.image.y = breakenemy.image.y;
+		}
+		else if (enemy.image.y == player.image.y)
+		{
+			if (enemy.image.x > player.image.x)
+			{
+				enemy.image.x--;
+				breakenemy.image.x = enemy.image.x;
+			}
+			else if (enemy.image.x < player.image.x)
+			{
+				enemy.image.x++;
+				breakenemy.image.x = enemy.image.x;
+			}
+		}
+		else {
+			enemy.image.y--;
+			breakenemy.image.y = enemy.image.y;
+		}
+	}
+
+	if (enemy.image.y <= player.image.y)
+	{
+		if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+			(enemy.image.y > 0 && enemy.image.y < 70))
+		{
+			enemy.image.y = breakenemy.image.y;
+		}
+		else if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+			(enemy.image.y > 83 && enemy.image.y < 426))
+		{
+			enemy.image.y = breakenemy.image.y;
+		}
+		else if (enemy.image.y == player.image.y)
+		{
+			if (enemy.image.x > player.image.x)
+			{
+				enemy.image.x--;
+				breakenemy.image.x = enemy.image.x;
+			}
+			else if (enemy.image.x < player.image.x)
+			{
+				enemy.image.x++;
+				breakenemy.image.x = enemy.image.x;
+			}
+		}
+		else {
+			enemy.image.y++;
+			breakenemy.image.y = enemy.image.y;
+		}
+	}
+
+
 
 	if (mouse.Button[MOUSE_INPUT_RIGHT] == TRUE)
 	{
@@ -1146,7 +1307,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	enemy.image.y = GAME_HEIGHT / 2 - enemy.image.height / 2;
 	enemy.CenterX = enemy.image.x + enemy.image.width / 2;
 	enemy.CenterY = enemy.image.y + enemy.image.height / 2;
-	enemy.speed = CHARA_SPEED_LOW;
+	enemy.speed = CHARA_SPEED_MIDI;
 	
 
 	/*
