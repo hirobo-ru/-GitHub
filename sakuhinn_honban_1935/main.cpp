@@ -759,14 +759,16 @@ VOID MY_START_PROC(VOID)
 		player.CenterX = startPt.x;
 		player.CenterY = startPt.y;
 
+		//プレイヤーのスタート地点
 		player.image.x = 690;
 		player.image.y = 430;
 
 		player.collBeforePt.x = player.CenterX;
 		player.collBeforePt.y = player.CenterY;
 
+		//敵のスタート地点
 		enemy.image.x = 42;
-		enemy.image.y = 60;
+		enemy.image.y = 78;
 
 
 		SetMousePoint(player.image.x, player.image.y);
@@ -838,7 +840,7 @@ VOID MY_PLAY(VOID)
 	MY_PLAY_PROC();	//プレイ画面の処理
 	MY_PLAY_DRAW();	//プレイ画面の描画
 
-	DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
+	//DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
 	return;
 }
 
@@ -852,18 +854,34 @@ VOID MY_PLAY_PROC(VOID)
 		PlaySoundMem(BGM.handle, DX_PLAYTYPE_LOOP);
 	}
 
+	DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
+
 	if (MY_KEY_DOWN(KEY_INPUT_UP) == TRUE) {
-		if (player.image.y > 0)
+		if (player.image.y > 60)
 		{
 			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 70))
+				(player.image.y > 0 && player.image.y < 60))
 			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
 
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
 			}
 			else if ((player.image.x > 73 && player.image.x < 643) &&
 					(player.image.y > 83 && player.image.y < 426))
 			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
 
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
 			}
 			else {
 				player.image.y--;
@@ -878,12 +896,26 @@ VOID MY_PLAY_PROC(VOID)
 			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 446 && player.image.y < 520))
 			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
 
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
 			}
 			else if ((player.image.x > 73 && player.image.x < 643) &&
 				(player.image.y > 83 && player.image.y < 426))
 			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
 
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
 			}
 			else {
 				player.image.y++;
@@ -896,7 +928,14 @@ VOID MY_PLAY_PROC(VOID)
 		if ((player.image.x > 73 && player.image.x < 643) &&
 			(player.image.y > 83 && player.image.y < 426))
 		{
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
 
+			GameEndKind = GAME_END_FAIL;
+
+			GameScene = GAME_SCENE_END;
 		}
 		else if (player.image.x > 41)
 		{
@@ -917,7 +956,14 @@ VOID MY_PLAY_PROC(VOID)
 		if ((player.image.x > 73 && player.image.x < 643) &&
 			(player.image.y > 83 && player.image.y < 426))
 		{
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
 
+			GameEndKind = GAME_END_FAIL;
+
+			GameScene = GAME_SCENE_END;
 		}
 		else if (player.image.x < 698)
 		{
@@ -934,32 +980,50 @@ VOID MY_PLAY_PROC(VOID)
 		}
 	}
 
+	//捕まり判定
+	if ((enemy.image.x - 20 <= player.image.x && enemy.image.x + 20 >= player.image.x) &&
+		(enemy.image.y - 20 <= player.image.y && enemy.image.y + 20 >= player.image.y))
+	{
+		if (CheckSoundMem(BGM.handle) != 0)
+		{
+			StopSoundMem(BGM.handle);
+		}
+
+		GameEndKind = GAME_END_FAIL;
+
+		GameScene = GAME_SCENE_END;
+	}
+
+	//敵の移動
+
+	//右
 	if (enemy.image.x <= player.image.x)
 	{
-		if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+		if ((enemy.image.x > 71 && enemy.image.x < 643) &&
 			(enemy.image.y > 83 && enemy.image.y < 426))
 		{
-			enemy.image.x = breakenemy.image.x;
+			if (enemy.image.x < 80)
+			{
+				enemy.image.x = 70;
+			}
+			else if (enemy.image.x > 630)
+			{
+				enemy.image.x = 645;
+			}
 		}
-		else if (enemy.image.x == player.image.x)
+		/*else if (enemy.image.x == player.image.x)
 		{
-			if (enemy.image.y < player.image.y)
+			if (enemy.image.y >= player.image.y)
 			{
-				enemy.image.y++;
-				breakenemy.image.y = enemy.image.y;
+
 			}
-			else if (enemy.image.y > player.image.y)
-			{
-				enemy.image.y--;
-				breakenemy.image.y = enemy.image.y;
-			}
-		}
+		}*/
 		else if (enemy.image.x < 698)
 		{
 			enemy.image.x++;
-			breakenemy.image.x = enemy.image.x;
-			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 70))
+			/*breakplayer.image.x = player.image.x;
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 68))
 			{
 
 			}
@@ -969,100 +1033,96 @@ VOID MY_PLAY_PROC(VOID)
 		}
 	}
 
+	//左
 	if (enemy.image.x >= player.image.x)
 	{
-		if ((enemy.image.x > 73 && enemy.image.x < 643) &&
+		if ((enemy.image.x > 71 && enemy.image.x < 690) &&
 			(enemy.image.y > 83 && enemy.image.y < 426))
 		{
-			enemy.image.x = breakenemy.image.x;
-		}
-		else if (enemy.image.x == player.image.x)
-		{
-			if (enemy.image.y > player.image.y)
+			if (enemy.image.x < 80)
 			{
-				enemy.image.y--;
-				breakenemy.image.y = enemy.image.y;
+				enemy.image.x = 70;
 			}
-			else if (enemy.image.y < player.image.y)
+			else if (enemy.image.x > 680)
 			{
-				enemy.image.y++;
-				breakenemy.image.y = enemy.image.y;
+				enemy.image.x = 691;
 			}
 		}
-		else if (enemy.image.x < 698)
+		else if (enemy.image.x > 41)
 		{
 			enemy.image.x--;
-			breakenemy.image.x = enemy.image.x;
-			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+			/*breakplayer.image.x = player.image.x;
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 0 && player.image.y < 70))
 			{
 
 			}
 			else {
-				player.image.y--;
+				player.image.x--;
 			}*/
 		}
 	}
 
-	if (enemy.image.y >= player.image.y)
+	//上
+	if (enemy.image.y > 60)
 	{
-		if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
-			(enemy.image.y > 0 && enemy.image.y < 70))
+		if (enemy.image.y >= player.image.y)
 		{
-			enemy.image.y = breakenemy.image.y;
-		}
-		else if ((enemy.image.x > 73 && enemy.image.x < 643) &&
-			(enemy.image.y > 83 && enemy.image.y < 426))
-		{
-			enemy.image.y = breakenemy.image.y;
-		}
-		else if (enemy.image.y == player.image.y)
-		{
-			if (enemy.image.x > player.image.x)
+			if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+				(enemy.image.y > 0 && enemy.image.y < 60))
 			{
-				enemy.image.x--;
-				breakenemy.image.x = enemy.image.x;
+				if (enemy.image.y < 60)
+				{
+					enemy.image.y = 61;
+				}
 			}
-			else if (enemy.image.x < player.image.x)
+			else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
 			{
-				enemy.image.x++;
-				breakenemy.image.x = enemy.image.x;
+				if (enemy.image.y < 90)
+				{
+					enemy.image.y = 82;
+				}
+				else if (enemy.image.y > 420)
+				{
+					enemy.image.y = 427;
+				}
 			}
-		}
-		else {
-			enemy.image.y--;
-			breakenemy.image.y = enemy.image.y;
+			else {
+				enemy.image.y--;
+			}
 		}
 	}
 
-	if (enemy.image.y <= player.image.y)
+	//下
+	if (enemy.image.y < 520)
 	{
-		if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
-			(enemy.image.y > 0 && enemy.image.y < 70))
+		if (enemy.image.y <= player.image.y)
 		{
-			enemy.image.y = breakenemy.image.y;
-		}
-		else if ((enemy.image.x > 73 && enemy.image.x < 643) &&
-			(enemy.image.y > 83 && enemy.image.y < 426))
-		{
-			enemy.image.y = breakenemy.image.y;
-		}
-		else if (enemy.image.y == player.image.y)
-		{
-			if (enemy.image.x > player.image.x)
+			if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+				(enemy.image.y > 446 && enemy.image.y < 520))
 			{
-				enemy.image.x--;
-				breakenemy.image.x = enemy.image.x;
+				if (enemy.image.y > 520)
+				{
+					enemy.image.y = 519;
+				}
 			}
-			else if (enemy.image.x < player.image.x)
+			else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
 			{
-				enemy.image.x++;
-				breakenemy.image.x = enemy.image.x;
+				if (enemy.image.y < 90)
+				{
+					enemy.image.y = 82;
+				}
+				else if (enemy.image.y > 420)
+				{
+					enemy.image.y = 427;
+				}
 			}
-		}
-		else {
-			enemy.image.y++;
-			breakenemy.image.y = enemy.image.y;
+			else {
+				enemy.image.y++;
+				//breakenemy.image.y = enemy.image.y;
+			}
 		}
 	}
 
@@ -1096,7 +1156,7 @@ VOID MY_PLAY_PROC(VOID)
 		}
 	}
 
-	//スペースキーを押したら、エンドシーンへ移動する
+	/*//スペースキーを押したら、エンドシーンへ移動する
 	if (MY_KEY_DOWN(KEY_INPUT_SPACE) == TRUE)
 	{
 		if (CheckSoundMem(BGM.handle) != 0)
@@ -1108,7 +1168,7 @@ VOID MY_PLAY_PROC(VOID)
 		GameScene = GAME_SCENE_END;
 
 		return;
-	}
+	}*/
 
 	return;
 }
@@ -1150,25 +1210,112 @@ VOID MY_END(VOID)
 //エンド画面の処理
 VOID MY_END_PROC(VOID)
 {
-	//エスケープキーを押したら、スタートシーンへ移動する
 	if (MY_KEY_DOWN(KEY_INPUT_ESCAPE) == TRUE)
 	{
-		//プレイ画面のBGMを止める
-		if (CheckSoundMem(BGM.handle) != 0)
+		if (CheckSoundMem(BGM_COMP.handle) != 0)
 		{
-			StopSoundMem(BGM.handle);
+			StopSoundMem(BGM_COMP.handle);
 		}
 
+		if (CheckSoundMem(BGM_FAIL.handle) != 0)
+		{
+			StopSoundMem(BGM_FAIL.handle);
+		}
+
+		SetMouseDispFlag(TRUE);
+
 		GameScene = GAME_SCENE_START;
+
+		return;
 	}
 
-	DrawString(0, 0, "エンド画面(エスケープキーを押して下さい)", GetColor(255, 255, 255));
+	/*if (CheckSoundMem(Owa.handle) == 0)
+	{
+		ChangeVolumeSoundMem(255 * 30 / 100, Owa.handle);
+
+		PlaySoundMem(Owa.handle, DX_PLAYTYPE_LOOP);
+	}*/
+
+	switch (GameEndKind)
+	{
+	case GAME_END_COMP:
+		if (CheckSoundMem(BGM_COMP.handle) == 0)
+		{
+			ChangeVolumeSoundMem(255 * 50 / 100, BGM_COMP.handle);
+			PlaySoundMem(BGM_COMP.handle, DX_PLAYTYPE_LOOP);
+		}
+
+		if (ImageEndCOMP.Cnt < ImageEndCOMP.CntMAX)
+		{
+			ImageEndCOMP.Cnt += IMAGE_END_COMP_CNT;
+		}
+		else
+		{
+			if (ImageEndCOMP.IsDraw == FALSE)
+			{
+				ImageEndCOMP.IsDraw = TRUE;
+			}
+			else if (ImageEndCOMP.IsDraw == TRUE)
+			{
+				ImageEndCOMP.IsDraw = FALSE;
+			}
+			ImageEndCOMP.Cnt = 0;
+		}
+		break;
+
+	case GAME_END_FAIL:
+		if (CheckSoundMem(BGM_FAIL.handle) == 0)
+		{
+			ChangeVolumeSoundMem(255 * 50 / 100, BGM_FAIL.handle);
+
+			PlaySoundMem(BGM_FAIL.handle, DX_PLAYTYPE_LOOP);
+		}
+
+		if (ImageEndFAIL.Cnt < ImageEndFAIL.CntMAX)
+		{
+			ImageEndFAIL.Cnt += IMAGE_END_FAIL_CNT;
+		}
+		else
+		{
+			if (ImageEndFAIL.IsDraw == FALSE)
+			{
+				ImageEndFAIL.IsDraw = TRUE;
+			}
+			else if (ImageEndFAIL.IsDraw == TRUE)
+			{
+				ImageEndFAIL.IsDraw = FALSE;
+			}
+			ImageEndFAIL.Cnt = 0;
+		}
+		break;
+	}
+
 	return;
 }
 
 //エンド画面の描画
 VOID MY_END_DRAW(VOID)
 {
+	MY_PLAY_DRAW();
+
+	switch (GameEndKind)
+	{
+	case GAME_END_COMP:
+		if (ImageEndCOMP.IsDraw == TRUE)
+		{
+			DrawGraph(ImageEndCOMP.image.x, ImageEndCOMP.image.y, ImageEndCOMP.image.handle, TRUE);
+		}
+		break;
+
+	case GAME_END_FAIL:
+		if (ImageEndFAIL.IsDraw == TRUE)
+		{
+			DrawGraph(ImageEndFAIL.image.x, ImageEndFAIL.image.y, ImageEndFAIL.image.handle, TRUE);
+		}
+		break;
+	}
+
+	DrawString(0, 0, "エンド画面(エスケープキーを押してください。)", GetColor(255, 255, 255));
 
 	return;
 }
@@ -1216,7 +1363,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	ImageTitleSTART.CntMAX = IMAGE_TITLE_START_CNT_MAX;
 	ImageTitleSTART.IsDraw = FALSE;
 
-	/*strcpy_s(ImageEndCOMP.image.path, IMAGE_END_COMP_PATH);
+	strcpy_s(ImageEndCOMP.image.path, IMAGE_END_COMP_PATH);
 	ImageEndCOMP.image.handle = LoadGraph(ImageEndCOMP.image.path);
 	if (ImageEndCOMP.image.handle == -1)
 	{
@@ -1229,8 +1376,8 @@ BOOL MY_LOAD_IMAGE(VOID)
 	ImageEndCOMP.Cnt = 0.0;
 	ImageEndCOMP.CntMAX = IMAGE_END_COMP_CNT_MAX;
 	ImageEndCOMP.IsDraw = FALSE;
-	*/
-	/*strcpy_s(ImageEndFAIL.image.path, IMAGE_END_FAIL_PATH);
+	
+	strcpy_s(ImageEndFAIL.image.path, IMAGE_END_FAIL_PATH);
 	ImageEndFAIL.image.handle = LoadGraph(ImageEndFAIL.image.path);
 	if (ImageEndFAIL.image.handle == -1)
 	{
@@ -1243,7 +1390,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	ImageEndFAIL.Cnt = 0.0;
 	ImageEndFAIL.CntMAX = IMAGE_END_FAIL_CNT_MAX;
 	ImageEndFAIL.IsDraw = FALSE;
-	*/
+	
 
 
 	/*strcpy_s(ImageBack[0].image.path, IMAGE_BACK_PATH);
@@ -1444,7 +1591,27 @@ BOOL MY_LOAD_MUSIC(VOID)
 		return FALSE;
 	}
 
+	//エンド画面の音楽
 
+	//コンプリートの音楽
+	strcpy_s(BGM_COMP.path, MUSIC_BGM_COMP_PATH);		//パスの設定
+	BGM_COMP.handle = LoadSoundMem(BGM_COMP.path);	//読み込み
+	if (BGM_COMP.handle == -1)
+	{
+		//エラーメッセージ表示
+		MessageBox(GetMainWindowHandle(), MUSIC_BGM_COMP_PATH, MUSIC_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
+
+	//フォールトの音楽
+	strcpy_s(BGM_FAIL.path, MUSIC_BGM_FAIL_PATH);		//パスの設定
+	BGM_FAIL.handle = LoadSoundMem(BGM_FAIL.path);	//読み込み
+	if (BGM_FAIL.handle == -1)
+	{
+		//エラーメッセージ表示
+		MessageBox(GetMainWindowHandle(), MUSIC_BGM_FAIL_PATH, MUSIC_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -1457,8 +1624,6 @@ VOID MY_DELETE_MUSIC(VOID)
 	DeleteSoundMem(BGM_TITLE.handle);
 	DeleteSoundMem(BGM_COMP.handle);
 	DeleteSoundMem(BGM_FAIL.handle);
-
-	//DeleteSoundMem(ShinkaHandle);
 
 	return;
 }
