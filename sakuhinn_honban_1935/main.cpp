@@ -1,6 +1,7 @@
 //########## ヘッダーファイル読み込み ##########
 #include "DxLib.h"
 #include "resource.h"
+#include <time.h>
 
 //########## マクロ定義 ##########
 #define GAME_WIDTH			800	//画面の横の大きさ
@@ -87,6 +88,8 @@
 
 #define MOUSE_R_CLICK_TITLE  TEXT("ゲーム中断")
 #define MOUSE_R_CLICK_CAPTION  TEXT("ゲームを中断し、タイトル画面に戻りますか？")
+
+#define limit1 30 
 
 enum GAME_MAP_KIND
 {
@@ -292,6 +295,10 @@ END Owa;
 MUSIC BGM_TITLE;
 MUSIC BGM_COMP;
 MUSIC BGM_FAIL;
+
+time_t s_time, e_time, n_time;  //制限時間に使う
+
+int FontHandle;
 
 GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		// 0 1 2 3 4 5 6 7 8 9 0 1 2
@@ -714,6 +721,8 @@ VOID MY_FONT_UNINSTALL_ONCE(VOID)
 //戻り値：BOOL ：エラー時はFALSE / 正常時はTRUE
 BOOL MY_FONT_CREATE(VOID)
 {
+	FontHandle = CreateFontToHandle(NULL, 40, 3);
+	ChangeFont("たぬき油性マジック");
 	return TRUE;
 }
 
@@ -730,8 +739,8 @@ VOID MY_START(VOID)
 	MY_START_PROC();	//スタート画面の処理
 	MY_START_DRAW();	//スタート画面の描画
 
-
-	DrawString(0, 0, "スタート画面(エンターキーを押して下さい)", GetColor(255, 255, 255));
+	//デバッグ用
+	//DrawString(0, 0, "スタート画面(エンターキーを押して下さい)", GetColor(255, 255, 255));
 	return;
 }
 
@@ -770,6 +779,11 @@ VOID MY_START_PROC(VOID)
 		enemy.image.x = 42;
 		enemy.image.y = 78;
 
+		//ゲーム開始の時間を入れる
+		time(&s_time);
+
+		//制限時間の設定
+		e_time = s_time + limit1;
 
 		SetMousePoint(player.image.x, player.image.y);
 
@@ -854,7 +868,8 @@ VOID MY_PLAY_PROC(VOID)
 		PlaySoundMem(BGM.handle, DX_PLAYTYPE_LOOP);
 	}
 
-	DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
+	//今の時間を記憶する
+	time(&n_time);
 
 	if (MY_KEY_DOWN(KEY_INPUT_UP) == TRUE) {
 		if (player.image.y > 60)
@@ -862,14 +877,14 @@ VOID MY_PLAY_PROC(VOID)
 			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 0 && player.image.y < 60))
 			{
-				if (CheckSoundMem(BGM.handle) != 0)
+				/*if (CheckSoundMem(BGM.handle) != 0)
 				{
 					StopSoundMem(BGM.handle);
 				}
 
 				GameEndKind = GAME_END_FAIL;
 
-				GameScene = GAME_SCENE_END;
+				GameScene = GAME_SCENE_END;*/
 			}
 			else if ((player.image.x > 73 && player.image.x < 643) &&
 					(player.image.y > 83 && player.image.y < 426))
@@ -896,14 +911,14 @@ VOID MY_PLAY_PROC(VOID)
 			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 				(player.image.y > 446 && player.image.y < 520))
 			{
-				if (CheckSoundMem(BGM.handle) != 0)
+				/*if (CheckSoundMem(BGM.handle) != 0)
 				{
 					StopSoundMem(BGM.handle);
 				}
 
 				GameEndKind = GAME_END_FAIL;
 
-				GameScene = GAME_SCENE_END;
+				GameScene = GAME_SCENE_END;*/
 			}
 			else if ((player.image.x > 73 && player.image.x < 643) &&
 				(player.image.y > 83 && player.image.y < 426))
@@ -980,9 +995,22 @@ VOID MY_PLAY_PROC(VOID)
 		}
 	}
 
+	//ゲームのクリア判定
+	if ((e_time - n_time) <= 0)
+	{
+		if (CheckSoundMem(BGM.handle) != 0)
+		{
+			StopSoundMem(BGM.handle);
+		}
+
+		GameEndKind = GAME_END_COMP;
+
+		GameScene = GAME_SCENE_END;
+	}
+
 	//捕まり判定
-	if ((enemy.image.x - 20 <= player.image.x && enemy.image.x + 20 >= player.image.x) &&
-		(enemy.image.y - 20 <= player.image.y && enemy.image.y + 20 >= player.image.y))
+	if ((enemy.image.x - 50 <= player.image.x && enemy.image.x + 50 >= player.image.x) &&
+		(enemy.image.y - 50 <= player.image.y && enemy.image.y + 50 >= player.image.y))
 	{
 		if (CheckSoundMem(BGM.handle) != 0)
 		{
@@ -1194,6 +1222,12 @@ VOID MY_PLAY_DRAW(VOID)
 	//敵の描画
 	DrawGraph(enemy.image.x, enemy.image.y, enemy.image.handle, TRUE);
 
+	//画面遷移
+	//DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
+
+	//時間の表示
+	DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255),FontHandle, "残り時間:%d", e_time - n_time);
+
 	return;
 }
 
@@ -1315,7 +1349,7 @@ VOID MY_END_DRAW(VOID)
 		break;
 	}
 
-	DrawString(0, 0, "エンド画面(エスケープキーを押してください。)", GetColor(255, 255, 255));
+	DrawString(0, 0, "エスケープキーを押してタイトル画面へ！", GetColor(255, 255, 255));
 
 	return;
 }
