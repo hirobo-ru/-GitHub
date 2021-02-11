@@ -89,7 +89,8 @@
 #define MOUSE_R_CLICK_TITLE  TEXT("ゲーム中断")
 #define MOUSE_R_CLICK_CAPTION  TEXT("ゲームを中断し、タイトル画面に戻りますか？")
 
-#define limit1 30 
+#define limit1 30
+#define limit2 45
 
 enum GAME_MAP_KIND
 {
@@ -296,13 +297,21 @@ MUSIC BGM_TITLE;
 MUSIC BGM_COMP;
 MUSIC BGM_FAIL;
 
-time_t s_time, e_time, n_time;  //制限時間に使う
+//制限時間に使う
+time_t n_time, s_time;
+time_t e_timeF; //ステージ1用
+time_t e_timeS; //ステージ2用
 
 int FontHandle;  //フォントの設定用。
 
-int bossFlag;
+int bossFlag;  //ボスにつかまったかどうかのフラグ。
 
-GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
+int Stage = 1;  //ステージ設定。
+
+int StageComp = 0; //ステージをクリアしたかどうかの判定。
+
+//ステージ1のマップ
+GAME_MAP_KIND mapDataF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{ 
 		// 0 1 2 3 4 5 6 7 8 9 0 1 2
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
 		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //1
@@ -315,15 +324,37 @@ GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,
 };
 
-GAME_MAP_KIND mapDataInit[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+//ステージ2のマップ
+GAME_MAP_KIND mapDataS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{ 
+		// 0 1 2 3 4 5 6 7 8 9 0 1 2
+		   k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //1
+		   k,t,k,k,k,k,t,k,k,k,k,t,k,  //2
+		   k,t,k,k,k,k,t,k,k,k,k,t,k,  //3
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //4
+		   k,t,k,k,k,k,t,k,k,k,k,t,k,  //5
+		   k,t,k,k,k,k,t,k,k,k,k,t,k,  //6
+		   k,t,t,t,t,t,t,t,t,t,t,t,k,  //7
+		   k,k,k,k,k,k,k,k,k,k,k,k,k,
+};
 
-MAPCHIP mapChip;
+GAME_MAP_KIND mapDataInitF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
-MAP map[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+GAME_MAP_KIND mapDataInitS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+MAPCHIP mapChipF;
+
+MAPCHIP mapChipS;
+
+MAP mapF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+MAP mapS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 iPOINT startPt{ -1,-1 };
 
-RECT mapColl[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+RECT mapCollF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+RECT mapCollS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 //########## プロトタイプ宣言 ##########
 VOID MY_FPS_UPDATE(VOID);			//FPS値を計測、更新する
@@ -364,7 +395,8 @@ VOID MY_DELETE_IMAGE(VOID);		//画像をまとめて削除する関数
 BOOL MY_LOAD_MUSIC(VOID);		//音楽をまとめて読み込む関数
 VOID MY_DELETE_MUSIC(VOID);		//音楽をまとめて削除する関数
 
-BOOL MY_CHECK_MAP1_PLAYER_COLL(RECT);
+BOOL MY_CHECK_MAPF_PLAYER_COLL(RECT);
+BOOL MY_CHECK_MAPS_PLAYER_COLL(RECT);
 BOOL MY_CHECK_RECT_COLL(RECT, RECT);
 
 //########## プログラムで最初に実行される関数 ##########
@@ -400,18 +432,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
-			if (mapData[tate][yoko] == s)
+			if (mapDataF[tate][yoko] == s)
 			{
-				startPt.x = mapChip.width * yoko + mapChip.width / 2;
-				startPt.y = mapChip.height * tate + mapChip.height / 2;
+				startPt.x = mapChipF.width * yoko + mapChipF.width / 2;
+				startPt.y = mapChipF.height * tate + mapChipF.height / 2;
 			}
 
-			if (mapData[tate][yoko] == g)
+			if (mapDataF[tate][yoko] == g)
 			{
-				GoalRect.left = mapChip.width * yoko;
-				GoalRect.top = mapChip.height * tate;
-				GoalRect.right = mapChip.width * (yoko + 1);
-				GoalRect.bottom = mapChip.height * (tate + 1);
+				GoalRect.left = mapChipF.width * yoko;
+				GoalRect.top = mapChipF.height * tate;
+				GoalRect.right = mapChipF.width * (yoko + 1);
+				GoalRect.bottom = mapChipF.height * (tate + 1);
 			}
 		}
 	}
@@ -788,7 +820,11 @@ VOID MY_START_PROC(VOID)
 		time(&s_time);
 
 		//制限時間の設定
-		e_time = s_time + limit1;
+		e_timeF = s_time + limit1; //ステージ1
+		e_timeS = s_time + limit2; //ステージ2
+
+		//ボスにつかまったフラグをOFFにする。
+		bossFlag = 0;
 
 		SetMousePoint(player.image.x, player.image.y);
 
@@ -1009,17 +1045,43 @@ VOID MY_PLAY_PROC(VOID)
 	}
 
 	//ゲームのクリア判定
-	if ((e_time - n_time) <= 0)
-	{
-		if (CheckSoundMem(BGM.handle) != 0)
+
+	//ステージ1
+	if (Stage == 1) {
+		if ((e_timeF - n_time) <= 0)
 		{
-			StopSoundMem(BGM.handle);
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
+
+			//ステージクリアのカウント
+			StageComp++;
+
+			GameEndKind = GAME_END_COMP;
+
+			GameScene = GAME_SCENE_END;
 		}
-
-		GameEndKind = GAME_END_COMP;
-
-		GameScene = GAME_SCENE_END;
 	}
+
+	//ステージ2
+	if (Stage >= 2) {
+		if ((e_timeS - n_time) <= 0)
+		{
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
+
+			//ステージクリアのカウント
+			StageComp++;
+
+			GameEndKind = GAME_END_COMP;
+
+			GameScene = GAME_SCENE_END;
+		}
+	}
+
 
 	//捕まり判定
 	if ((enemy.image.x - 50 <= player.image.x && enemy.image.x + 50 >= player.image.x) &&
@@ -1224,13 +1286,27 @@ VOID MY_PLAY_DRAW(VOID)
 	{
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
-			DrawGraph(
-				map[tate][yoko].x,
-				map[tate][yoko].y,
-				mapChip.handle[map[tate][yoko].kind],
-				TRUE);
+			//ステージ1
+			if (Stage == 1) {
+				DrawGraph(
+					mapF[tate][yoko].x,
+					mapF[tate][yoko].y,
+					mapChipF.handle[mapF[tate][yoko].kind],
+					TRUE);
+			}
+
+			//ステージ2
+			if (Stage >= 2) {
+				DrawGraph(
+					mapS[tate][yoko].x,
+					mapS[tate][yoko].y,
+					mapChipS.handle[mapS[tate][yoko].kind],
+					TRUE);
+			}
 		}
 	}
+
+
 
 	//プレイヤーの描画
 	DrawGraph(player.image.x, player.image.y, player.image.handle, TRUE);
@@ -1242,7 +1318,16 @@ VOID MY_PLAY_DRAW(VOID)
 	//DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
 
 	//時間の表示
-	DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255),FontHandle, "残り時間:%d", e_time - n_time);
+
+	//ステージ1
+	if (Stage == 1){
+		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeF - n_time);
+	}
+
+	//ステージ2
+	if (Stage >= 2) {
+		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeS - n_time);
+	}
 
 	return;
 }
@@ -1270,6 +1355,11 @@ VOID MY_END_PROC(VOID)
 		if (CheckSoundMem(BGM_FAIL.handle) != 0)
 		{
 			StopSoundMem(BGM_FAIL.handle);
+		}
+
+		//次のステージへいけるかどうかの判定
+		if (StageComp >= 1) {
+			Stage++;
 		}
 
 		SetMouseDispFlag(TRUE);
@@ -1311,6 +1401,10 @@ VOID MY_END_PROC(VOID)
 			}
 			ImageEndCOMP.Cnt = 0;
 		}
+
+		//次のステージへ
+		//Stage++;
+
 		break;
 
 	case GAME_END_FAIL:
@@ -1373,6 +1467,11 @@ VOID MY_END_DRAW(VOID)
 
 	DrawString(0, 0, "エスケープキーを押してタイトル画面へ！", GetColor(255, 255, 255));
 
+	//デバッグ用
+	/*if (Stage == 2) {
+		//Stage = 2;
+		DrawString(0, 0, "エスケープキーを押してタイトル画面へ！", GetColor(255, 255, 255));
+	}*/
 	return;
 }
 
@@ -1556,34 +1655,35 @@ BOOL MY_LOAD_IMAGE(VOID)
 		player.tama[cnt].speed = CHARA_SPEED_LOW;
 	}*/
 
-	int mapRes = LoadDivGraph(
+	//ステージ1の画像設定。
+	int mapResF = LoadDivGraph(
 		GAME_MAP_PATH,
 		MAP_DIV_NUM, MAP_DIV_TATE, MAP_DIV_YOKO,
 		MAP_DIV_WIDTH, MAP_DIV_HEIGHT,
-		&mapChip.handle[0]);
+		&mapChipF.handle[0]);
 
-	if (mapRes == -1)
+	if (mapResF == -1)
 	{
 		MessageBox(GetMainWindowHandle(), GAME_MAP_PATH, IMAGE_LOAD_ERR_TITLE, MB_OK);
 		return FALSE;
 	}
 
-	GetGraphSize(mapChip.handle[0], &mapChip.width, &mapChip.height);
+	GetGraphSize(mapChipF.handle[0], &mapChipF.width, &mapChipF.height);
 	
 	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
 	{
 
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
-			mapDataInit[tate][yoko] = mapData[tate][yoko];
+			mapDataInitF[tate][yoko] = mapDataF[tate][yoko];
 
-			map[tate][yoko].kind = mapData[tate][yoko];
+			mapF[tate][yoko].kind = mapDataF[tate][yoko];
 
-			map[tate][yoko].width = mapChip.width;
-			map[tate][yoko].height = mapChip.height;
+			mapF[tate][yoko].width = mapChipF.width;
+			mapF[tate][yoko].height = mapChipF.height;
 
-			map[tate][yoko].x = yoko * map[tate][yoko].width;
-			map[tate][yoko].y = tate * map[tate][yoko].height;
+			mapF[tate][yoko].x = yoko * mapF[tate][yoko].width;
+			mapF[tate][yoko].y = tate * mapF[tate][yoko].height;
 		}
 	}
 
@@ -1591,10 +1691,53 @@ BOOL MY_LOAD_IMAGE(VOID)
 	{
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
-			mapColl[tate][yoko].left = (yoko + 0) * mapChip.width + 1;
-			mapColl[tate][yoko].top = (tate + 0) * mapChip.height + 1;
-			mapColl[tate][yoko].right = (yoko + 1) * mapChip.width - 1;
-			mapColl[tate][yoko].bottom = (tate + 1) * mapChip.height - 1;
+			mapCollF[tate][yoko].left = (yoko + 0) * mapChipF.width + 1;
+			mapCollF[tate][yoko].top = (tate + 0) * mapChipF.height + 1;
+			mapCollF[tate][yoko].right = (yoko + 1) * mapChipF.width - 1;
+			mapCollF[tate][yoko].bottom = (tate + 1) * mapChipF.height - 1;
+		}
+	}
+
+	//ステージ2の画像設定。
+	int mapResS = LoadDivGraph(
+		GAME_MAP_PATH,
+		MAP_DIV_NUM, MAP_DIV_TATE, MAP_DIV_YOKO,
+		MAP_DIV_WIDTH, MAP_DIV_HEIGHT,
+		&mapChipS.handle[0]);
+
+	if (mapResS == -1)
+	{
+		MessageBox(GetMainWindowHandle(), GAME_MAP_PATH, IMAGE_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
+
+	GetGraphSize(mapChipS.handle[0], &mapChipS.width, &mapChipS.height);
+
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			mapDataInitS[tate][yoko] = mapDataS[tate][yoko];
+
+			mapS[tate][yoko].kind = mapDataS[tate][yoko];
+
+			mapS[tate][yoko].width = mapChipS.width;
+			mapS[tate][yoko].height = mapChipS.height;
+
+			mapS[tate][yoko].x = yoko * mapS[tate][yoko].width;
+			mapS[tate][yoko].y = tate * mapS[tate][yoko].height;
+		}
+	}
+
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			mapCollS[tate][yoko].left = (yoko + 0) * mapChipS.width + 1;
+			mapCollS[tate][yoko].top = (tate + 0) * mapChipS.height + 1;
+			mapCollS[tate][yoko].right = (yoko + 1) * mapChipS.width - 1;
+			mapCollS[tate][yoko].bottom = (tate + 1) * mapChipS.height - 1;
 		}
 	}
 
@@ -1685,15 +1828,31 @@ VOID MY_DELETE_MUSIC(VOID)
 }
 
 
-BOOL MY_CHECK_MAP1_PLAYER_COLL(RECT player)
+BOOL MY_CHECK_MAPF_PLAYER_COLL(RECT player)
 {
 	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
 	{
 		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
 		{
-			if (MY_CHECK_RECT_COLL(player, mapColl[tate][yoko]) == TRUE)
+			if (MY_CHECK_RECT_COLL(player, mapCollF[tate][yoko]) == TRUE)
 			{
-				if (map[tate][yoko].kind == k) { return TRUE; }
+				if (mapF[tate][yoko].kind == k) { return TRUE; }
+			}
+		}
+	}
+
+	return FALSE;
+}
+
+BOOL MY_CHECK_MAPS_PLAYER_COLL(RECT player)
+{
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			if (MY_CHECK_RECT_COLL(player, mapCollS[tate][yoko]) == TRUE)
+			{
+				if (mapS[tate][yoko].kind == k) { return TRUE; }
 			}
 		}
 	}
