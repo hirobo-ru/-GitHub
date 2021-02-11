@@ -35,8 +35,8 @@
 #define IMAGE_LOAD_ERR_TITLE	TEXT("画像読み込みエラー")
 
 //#define IMAGE_BACK_PATH TEXT(".\\IMAGE\\LavaCave.png")  //プレイ画面の背景
-#define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\basya-mo2.png")
-#define IMAGE_ENEMY_PATH TEXT(".\\IMAGE\\enemy_stage1.png")
+#define IMAGE_PLAYER_PATH TEXT(".\\IMAGE\\basya-moR.png")
+#define IMAGE_ENEMY_PATH TEXT(".\\IMAGE\\boss_kiri2.png")
 
 #define IMAGE_TITLE_BK_PATH TEXT(".\\IMAGE\\Universe.png")
 #define IMAGE_TITLE_ROGO_PATH TEXT(".\\IMAGE\\MyGameLogo.png")
@@ -298,7 +298,9 @@ MUSIC BGM_FAIL;
 
 time_t s_time, e_time, n_time;  //制限時間に使う
 
-int FontHandle;
+int FontHandle;  //フォントの設定用。
+
+int bossFlag;
 
 GAME_MAP_KIND mapData[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		// 0 1 2 3 4 5 6 7 8 9 0 1 2
@@ -779,6 +781,9 @@ VOID MY_START_PROC(VOID)
 		enemy.image.x = 42;
 		enemy.image.y = 78;
 
+		//プレイヤーの画像初期化
+		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moR.png"));
+
 		//ゲーム開始の時間を入れる
 		time(&s_time);
 
@@ -940,6 +945,10 @@ VOID MY_PLAY_PROC(VOID)
 	}
 
 	if (MY_KEY_DOWN(KEY_INPUT_LEFT) == TRUE) {
+
+		//プレイヤー画像を左向きにする。
+		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moL.png"));
+
 		if ((player.image.x > 73 && player.image.x < 643) &&
 			(player.image.y > 83 && player.image.y < 426))
 		{
@@ -968,6 +977,10 @@ VOID MY_PLAY_PROC(VOID)
 	}
 
 	if (MY_KEY_DOWN(KEY_INPUT_RIGHT) == TRUE) {
+
+		//プレイヤーの画像の向きを右向きにする。
+		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moR.png"));
+
 		if ((player.image.x > 73 && player.image.x < 643) &&
 			(player.image.y > 83 && player.image.y < 426))
 		{
@@ -1016,6 +1029,9 @@ VOID MY_PLAY_PROC(VOID)
 		{
 			StopSoundMem(BGM.handle);
 		}
+
+		//ボスにつかまったとき、プレイヤーの画像を変える。
+		bossFlag = 1;
 
 		GameEndKind = GAME_END_FAIL;
 
@@ -1342,6 +1358,12 @@ VOID MY_END_DRAW(VOID)
 		break;
 
 	case GAME_END_FAIL:
+
+		//捕まった場合の画像に変更。
+		if (bossFlag == 1) {
+			player.image.handle = LoadGraph(TEXT(".//IMAGE//basya_card2.jpg"));//---------------------------
+		}
+
 		if (ImageEndFAIL.IsDraw == TRUE)
 		{
 			DrawGraph(ImageEndFAIL.image.x, ImageEndFAIL.image.y, ImageEndFAIL.image.handle, TRUE);
