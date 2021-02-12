@@ -915,33 +915,115 @@ VOID MY_PLAY_PROC(VOID)
 	if (MY_KEY_DOWN(KEY_INPUT_UP) == TRUE) {
 		if (player.image.y > 60)
 		{
-			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 60))
-			{
-				/*if (CheckSoundMem(BGM.handle) != 0)
+			if (Stage == 1) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 60))
 				{
-					StopSoundMem(BGM.handle);
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
 				}
-
-				GameEndKind = GAME_END_FAIL;
-
-				GameScene = GAME_SCENE_END;*/
-			}
-			else if ((player.image.x > 73 && player.image.x < 643) &&
+				else if ((player.image.x > 73 && player.image.x < 643) &&
 					(player.image.y > 83 && player.image.y < 426))
-			{
-				if (CheckSoundMem(BGM.handle) != 0)
 				{
-					StopSoundMem(BGM.handle);
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+				else {
+					player.image.y--;
+					breakplayer.image.y = player.image.y;
+				}
+			}
+
+			if (Stage >= 2) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 60))
+				{
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
+				}
+				
+				//プレイヤーから左上
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+						(player.image.y > 83 && player.image.y < 210))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
 				}
 
-				GameEndKind = GAME_END_FAIL;
+				//右上
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 210))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
 
-				GameScene = GAME_SCENE_END;
-			}
-			else {
-				player.image.y--;
-				breakplayer.image.y = player.image.y;
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				//左下
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+					(player.image.y > 264 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+
+				//右下
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+						(player.image.y > 264 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+
+				else {
+					player.image.y--;
+					breakplayer.image.y = player.image.y;
+				}
 			}
 		}
 	}
@@ -949,19 +1031,125 @@ VOID MY_PLAY_PROC(VOID)
 	if (MY_KEY_DOWN(KEY_INPUT_DOWN) == TRUE) {
 		if (player.image.y < 520)
 		{
-			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 446 && player.image.y < 520))
-			{
-				/*if (CheckSoundMem(BGM.handle) != 0)
+			if (Stage == 1) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 446 && player.image.y < 520))
 				{
-					StopSoundMem(BGM.handle);
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
+				}
+				else if ((player.image.x > 73 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+				else {
+					player.image.y++;
+					breakplayer.image.y = player.image.y;
+				}
+			}
+
+			if (Stage >= 2) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 446 && player.image.y < 520))
+				{
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
+				}
+				//プレイヤーから左上
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+					(player.image.y > 83 && player.image.y < 210))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
 				}
 
-				GameEndKind = GAME_END_FAIL;
+				//右上
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 210))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
 
-				GameScene = GAME_SCENE_END;*/
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				//左下
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+					(player.image.y > 264 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+
+				//右下
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+					(player.image.y > 264 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+				}
+
+				else{
+					player.image.y++;
+					breakplayer.image.y = player.image.y;
+				}
 			}
-			else if ((player.image.x > 73 && player.image.x < 643) &&
+		}
+	}
+
+	if (MY_KEY_DOWN(KEY_INPUT_LEFT) == TRUE) {
+
+		//プレイヤー画像を左向きにする。
+		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moL.png"));
+
+		if (Stage == 1) {
+			if ((player.image.x > 73 && player.image.x < 643) &&
 				(player.image.y > 83 && player.image.y < 426))
 			{
 				if (CheckSoundMem(BGM.handle) != 0)
@@ -973,42 +1161,95 @@ VOID MY_PLAY_PROC(VOID)
 
 				GameScene = GAME_SCENE_END;
 			}
-			else {
-				player.image.y++;
-				breakplayer.image.y = player.image.y;
-			}
-		}
-	}
-
-	if (MY_KEY_DOWN(KEY_INPUT_LEFT) == TRUE) {
-
-		//プレイヤー画像を左向きにする。
-		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moL.png"));
-
-		if ((player.image.x > 73 && player.image.x < 643) &&
-			(player.image.y > 83 && player.image.y < 426))
-		{
-			if (CheckSoundMem(BGM.handle) != 0)
+			else if (player.image.x > 41)
 			{
-				StopSoundMem(BGM.handle);
-			}
-
-			GameEndKind = GAME_END_FAIL;
-
-			GameScene = GAME_SCENE_END;
-		}
-		else if (player.image.x > 41)
-		{
-			player.image.x--;
-			breakplayer.image.x = player.image.x;
-			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 70))
-			{
-
-			}
-			else {
 				player.image.x--;
-			}*/
+				breakplayer.image.x = player.image.x;
+				/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
+
+				}
+				else {
+					player.image.x--;
+				}*/
+			}
+		}
+
+		if (Stage >= 2) {
+			//プレイヤーから左上
+			if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 83 && player.image.y < 210))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			//右上
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 210))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			//左下
+			else if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 264 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+			}
+
+			//右下
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 264 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+			}
+
+			else if (player.image.x > 41)
+			{
+				player.image.x--;
+				breakplayer.image.x = player.image.x;
+				/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+						(player.image.y > 0 && player.image.y < 70))
+					{
+
+					}
+					else {
+						player.image.x--;
+					}*/
+			}
 		}
 	}
 
@@ -1017,30 +1258,109 @@ VOID MY_PLAY_PROC(VOID)
 		//プレイヤーの画像の向きを右向きにする。
 		player.image.handle = LoadGraph(TEXT(".//IMAGE//basya-moR.png"));
 
-		if ((player.image.x > 73 && player.image.x < 643) &&
-			(player.image.y > 83 && player.image.y < 426))
-		{
-			if (CheckSoundMem(BGM.handle) != 0)
+
+		if (Stage == 1) {
+			if ((player.image.x > 73 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 426))
 			{
-				StopSoundMem(BGM.handle);
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
 			}
+			else if (player.image.x < 698)
+			{
+				player.image.x++;
+				breakplayer.image.x = player.image.x;
+				/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
 
-			GameEndKind = GAME_END_FAIL;
-
-			GameScene = GAME_SCENE_END;
+				}
+				else {
+					player.image.y--;
+				}*/
+			}
 		}
-		else if (player.image.x < 698)
-		{
-			player.image.x++;
-			breakplayer.image.x = player.image.x;
-			/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 70))
-			{
 
+		if (Stage >= 2) {
+			//左上
+			if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 83 && player.image.y < 210))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
 			}
-			else {
-				player.image.y--;
-			}*/
+
+			//右上
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 210))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			//左下
+			else if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 264 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+			}
+
+			//右下
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 264 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+			}
+
+			else if (player.image.x < 698)
+			{
+				player.image.x++;
+				breakplayer.image.x = player.image.x;
+				/*if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
+
+				}
+				else {
+					player.image.y--;
+				}*/
+			}
 		}
 	}
 
@@ -1105,67 +1425,222 @@ VOID MY_PLAY_PROC(VOID)
 	//右
 	if (enemy.image.x <= player.image.x)
 	{
-		if ((enemy.image.x > 71 && enemy.image.x < 643) &&
-			(enemy.image.y > 83 && enemy.image.y < 426))
-		{
-			if (enemy.image.x < 80)
+		if (Stage == 1) {
+			if ((enemy.image.x > 71 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
 			{
-				enemy.image.x = 70;
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 70;
+				}
+				else if (enemy.image.x > 630)
+				{
+					enemy.image.x = 645;
+				}
 			}
-			else if (enemy.image.x > 630)
+			/*else if (enemy.image.x == player.image.x)
 			{
-				enemy.image.x = 645;
+				if (enemy.image.y >= player.image.y)
+				{
+
+				}
+			}*/
+			else if (enemy.image.x < 698)
+			{
+				enemy.image.x++;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 68))
+				{
+
+				}
+				else {
+					player.image.y--;
+				}*/
 			}
 		}
-		/*else if (enemy.image.x == player.image.x)
-		{
-			if (enemy.image.y >= player.image.y)
-			{
 
-			}
-		}*/
-		else if (enemy.image.x < 698)
-		{
-			enemy.image.x++;
-			/*breakplayer.image.x = player.image.x;
-			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 68))
+		if (Stage >= 2) {
+			//左上
+			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 83 && enemy.image.y < 210))
 			{
-
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
 			}
-			else {
-				player.image.y--;
+
+			//右上
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 210))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 630)
+				{
+					enemy.image.x = 645;
+				}
+			}
+
+			//左下
+			else if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 264 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
+			}
+
+			//右下
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 264 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 630)
+				{
+					enemy.image.x = 645;
+				}
+			}
+
+			/*else if (enemy.image.x == player.image.x)
+			{
+				if (enemy.image.y >= player.image.y)
+				{
+
+				}
 			}*/
+
+			else if (enemy.image.x < 698)
+			{
+				enemy.image.x++;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 68))
+				{
+
+				}
+				else {
+					player.image.y--;
+				}*/
+			}
 		}
 	}
 
 	//左
 	if (enemy.image.x >= player.image.x)
 	{
-		if ((enemy.image.x > 71 && enemy.image.x < 690) &&
-			(enemy.image.y > 83 && enemy.image.y < 426))
-		{
-			if (enemy.image.x < 80)
+		if (Stage == 1) {
+			if ((enemy.image.x > 71 && enemy.image.x < 690) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
 			{
-				enemy.image.x = 70;
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 70;
+				}
+				else if (enemy.image.x > 680)
+				{
+					enemy.image.x = 691;
+				}
 			}
-			else if (enemy.image.x > 680)
+			else if (enemy.image.x > 41)
 			{
-				enemy.image.x = 691;
+				enemy.image.x--;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
+
+				}
+				else {
+					player.image.x--;
+				}*/
 			}
 		}
-		else if (enemy.image.x > 41)
-		{
-			enemy.image.x--;
-			/*breakplayer.image.x = player.image.x;
-			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
-				(player.image.y > 0 && player.image.y < 70))
-			{
 
+		if (Stage >= 2) {
+			//左上
+			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 83 && enemy.image.y < 210))
+			{
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
 			}
-			else {
-				player.image.x--;
-			}*/
+
+			//右上
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 210))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 630)
+				{
+					enemy.image.x = 645;
+				}
+			}
+
+			//左下
+			else if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 264 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
+			}
+
+			//右下
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 264 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 630)
+				{
+					enemy.image.x = 645;
+				}
+			}
+			else if (enemy.image.x > 41)
+			{
+				enemy.image.x--;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
+
+				}
+				else {
+					player.image.x--;
+				}*/
+			}
 		}
 	}
 
@@ -1174,28 +1649,99 @@ VOID MY_PLAY_PROC(VOID)
 	{
 		if (enemy.image.y >= player.image.y)
 		{
-			if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
-				(enemy.image.y > 0 && enemy.image.y < 60))
-			{
-				if (enemy.image.y < 60)
+			if (Stage == 1) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 0 && enemy.image.y < 60))
 				{
-					enemy.image.y = 61;
+					if (enemy.image.y < 60)
+					{
+						enemy.image.y = 61;
+					}
+				}
+				else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 82;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 427;
+					}
+				}
+				else {
+					enemy.image.y--;
 				}
 			}
-			else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
-				(enemy.image.y > 83 && enemy.image.y < 426))
-			{
-				if (enemy.image.y < 90)
+
+			if (Stage >= 2) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 0 && enemy.image.y < 60))
 				{
-					enemy.image.y = 82;
+					if (enemy.image.y < 60)
+					{
+						enemy.image.y = 61;
+					}
 				}
-				else if (enemy.image.y > 420)
+				//左上
+				if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 83 && enemy.image.y < 210))
 				{
-					enemy.image.y = 427;
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 200)
+					{
+						enemy.image.y = 213;
+					}
 				}
-			}
-			else {
-				enemy.image.y--;
+
+				//右上
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 210))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 200)
+					{
+						enemy.image.y = 213;
+					}
+				}
+
+				//左下
+				else if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 264 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 270)
+					{
+						enemy.image.y = 260;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
+				//右下
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 264 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 270)
+					{
+						enemy.image.y = 260;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+				else {
+					enemy.image.y--;
+				}
 			}
 		}
 	}
@@ -1205,29 +1751,101 @@ VOID MY_PLAY_PROC(VOID)
 	{
 		if (enemy.image.y <= player.image.y)
 		{
-			if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
-				(enemy.image.y > 446 && enemy.image.y < 520))
-			{
-				if (enemy.image.y > 520)
+			if (Stage == 1) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 446 && enemy.image.y < 520))
 				{
-					enemy.image.y = 519;
+					if (enemy.image.y > 520)
+					{
+						enemy.image.y = 519;
+					}
+				}
+				else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 82;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 427;
+					}
+				}
+				else {
+					enemy.image.y++;
+					//breakenemy.image.y = enemy.image.y;
 				}
 			}
-			else if ((enemy.image.x > 71 && enemy.image.x < 643) &&
-				(enemy.image.y > 83 && enemy.image.y < 426))
-			{
-				if (enemy.image.y < 90)
+
+			if (Stage >= 2) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 446 && enemy.image.y < 520))
 				{
-					enemy.image.y = 82;
+					if (enemy.image.y > 520)
+					{
+						enemy.image.y = 519;
+					}
 				}
-				else if (enemy.image.y > 420)
+				//左上
+				if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 83 && enemy.image.y < 210))
 				{
-					enemy.image.y = 427;
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 200)
+					{
+						enemy.image.y = 213;
+					}
 				}
-			}
-			else {
-				enemy.image.y++;
-				//breakenemy.image.y = enemy.image.y;
+
+				//右上
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 210))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 200)
+					{
+						enemy.image.y = 213;
+					}
+				}
+
+				//左下
+				else if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 264 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 270)
+					{
+						enemy.image.y = 260;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
+				//右下
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 264 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 270)
+					{
+						enemy.image.y = 260;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+				else {
+					enemy.image.y++;
+					//breakenemy.image.y = enemy.image.y;
+				}
 			}
 		}
 	}
