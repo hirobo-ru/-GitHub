@@ -91,6 +91,7 @@
 
 #define limit1 30
 #define limit2 45
+#define limit3 60
 
 enum GAME_MAP_KIND
 {
@@ -301,6 +302,7 @@ MUSIC BGM_FAIL;
 time_t n_time, s_time;
 time_t e_timeF; //ステージ1用
 time_t e_timeS; //ステージ2用
+time_t e_timeT; //ステージ3用
 
 int FontHandle;  //フォントの設定用。
 
@@ -338,23 +340,44 @@ GAME_MAP_KIND mapDataS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,
 };
 
+GAME_MAP_KIND mapDataT[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
+	// 0 1 2 3 4 5 6 7 8 9 0 1 2
+	  k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
+	  k,t,t,t,t,t,t,t,t,t,t,t,k,  //1
+	  k,t,k,k,k,k,t,k,k,k,k,t,k,  //2
+	  k,t,k,k,k,k,t,k,k,k,k,t,k,  //3
+	  k,t,k,k,k,k,t,k,k,k,k,t,k,  //4
+	  k,t,k,k,k,k,t,k,k,k,k,t,k,  //5
+	  k,t,k,k,k,k,t,k,k,k,k,t,k,  //6
+	  k,t,t,t,t,t,t,t,t,t,t,t,k,  //7
+	  k,k,k,k,k,k,k,k,k,k,k,k,k,
+};
+
 GAME_MAP_KIND mapDataInitF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 GAME_MAP_KIND mapDataInitS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+GAME_MAP_KIND mapDataInitT[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 MAPCHIP mapChipF;
 
 MAPCHIP mapChipS;
 
+MAPCHIP mapChipT;
+
 MAP mapF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 MAP mapS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+MAP mapT[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 iPOINT startPt{ -1,-1 };
 
 RECT mapCollF[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 RECT mapCollS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
+
+RECT mapCollT[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX];
 
 //########## プロトタイプ宣言 ##########
 VOID MY_FPS_UPDATE(VOID);			//FPS値を計測、更新する
@@ -822,6 +845,7 @@ VOID MY_START_PROC(VOID)
 		//制限時間の設定
 		e_timeF = s_time + limit1; //ステージ1
 		e_timeS = s_time + limit2; //ステージ2
+		e_timeT = s_time + limit3; //ステージ3
 
 		//ボスにつかまったフラグをOFFにする。
 		bossFlag = 0;
@@ -1914,11 +1938,20 @@ VOID MY_PLAY_DRAW(VOID)
 			}
 
 			//ステージ2
-			if (Stage >= 2) {
+			if (Stage == 2) {
 				DrawGraph(
 					mapS[tate][yoko].x,
 					mapS[tate][yoko].y,
 					mapChipS.handle[mapS[tate][yoko].kind],
+					TRUE);
+			}
+
+			//ステージ3
+			if (Stage >= 3) {
+				DrawGraph(
+					mapT[tate][yoko].x,
+					mapT[tate][yoko].y,
+					mapChipT.handle[mapT[tate][yoko].kind],
 					TRUE);
 			}
 		}
@@ -1943,7 +1976,12 @@ VOID MY_PLAY_DRAW(VOID)
 	}
 
 	//ステージ2
-	if (Stage >= 2) {
+	if (Stage == 2) {
+		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeS - n_time);
+	}
+
+	//ステージ3
+	if (Stage >= 3) {
 		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeS - n_time);
 	}
 
@@ -2073,7 +2111,7 @@ VOID MY_END_DRAW(VOID)
 
 		//捕まった場合の画像に変更。
 		if (bossFlag == 1) {
-			player.image.handle = LoadGraph(TEXT(".//IMAGE//basya_card2.jpg"));//---------------------------
+			player.image.handle = LoadGraph(TEXT(".//IMAGE//basya_card2.jpg"));
 		}
 
 		if (ImageEndFAIL.IsDraw == TRUE)
@@ -2227,7 +2265,7 @@ BOOL MY_LOAD_IMAGE(VOID)
 	enemy.image.y = GAME_HEIGHT / 2 - enemy.image.height / 2;
 	enemy.CenterX = enemy.image.x + enemy.image.width / 2;
 	enemy.CenterY = enemy.image.y + enemy.image.height / 2;
-	enemy.speed = CHARA_SPEED_MIDI;
+	enemy.speed = CHARA_SPEED_MIDI;//
 	
 
 	/*
@@ -2345,6 +2383,49 @@ BOOL MY_LOAD_IMAGE(VOID)
 
 			mapS[tate][yoko].x = yoko * mapS[tate][yoko].width;
 			mapS[tate][yoko].y = tate * mapS[tate][yoko].height;
+		}
+	}
+
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			mapCollS[tate][yoko].left = (yoko + 0) * mapChipS.width + 1;
+			mapCollS[tate][yoko].top = (tate + 0) * mapChipS.height + 1;
+			mapCollS[tate][yoko].right = (yoko + 1) * mapChipS.width - 1;
+			mapCollS[tate][yoko].bottom = (tate + 1) * mapChipS.height - 1;
+		}
+	}
+
+	//ステージ3の画像設定。
+	int mapResT = LoadDivGraph(
+		GAME_MAP_PATH,
+		MAP_DIV_NUM, MAP_DIV_TATE, MAP_DIV_YOKO,
+		MAP_DIV_WIDTH, MAP_DIV_HEIGHT,
+		&mapChipT.handle[0]);
+
+	if (mapResT == -1)
+	{
+		MessageBox(GetMainWindowHandle(), GAME_MAP_PATH, IMAGE_LOAD_ERR_TITLE, MB_OK);
+		return FALSE;
+	}
+
+	GetGraphSize(mapChipT.handle[0], &mapChipT.width, &mapChipT.height);
+
+	for (int tate = 0; tate < GAME_MAP_TATE_MAX; tate++)
+	{
+
+		for (int yoko = 0; yoko < GAME_MAP_YOKO_MAX; yoko++)
+		{
+			mapDataInitT[tate][yoko] = mapDataT[tate][yoko];
+
+			mapT[tate][yoko].kind = mapDataT[tate][yoko];
+
+			mapT[tate][yoko].width = mapChipT.width;
+			mapT[tate][yoko].height = mapChipT.height;
+
+			mapT[tate][yoko].x = yoko * mapT[tate][yoko].width;
+			mapT[tate][yoko].y = tate * mapT[tate][yoko].height;
 		}
 	}
 
