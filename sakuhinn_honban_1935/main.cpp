@@ -289,6 +289,7 @@ CHARA player;		//ゲームのキャラ
 CHARA enemy;		//敵キャラ
 CHARA breakplayer;	//プレイヤー抜け出すよう
 CHARA breakenemy;	//敵キャラ抜け出すよう
+CHARA trap; //仕掛け
 
 MUSIC BGM;
 TITLE Title;
@@ -340,6 +341,7 @@ GAME_MAP_KIND mapDataS[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 		   k,k,k,k,k,k,k,k,k,k,k,k,k,
 };
 
+//ステージ3のマップ
 GAME_MAP_KIND mapDataT[GAME_MAP_TATE_MAX][GAME_MAP_YOKO_MAX]{
 	// 0 1 2 3 4 5 6 7 8 9 0 1 2
 	  k,k,k,k,k,k,k,k,k,k,k,k,k,  //0
@@ -970,7 +972,7 @@ VOID MY_PLAY_PROC(VOID)
 				}
 			}
 
-			if (Stage >= 2) {
+			if (Stage == 2) {
 				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 					(player.image.y > 0 && player.image.y < 60))
 				{
@@ -1049,6 +1051,58 @@ VOID MY_PLAY_PROC(VOID)
 					breakplayer.image.y = player.image.y;
 				}
 			}
+
+			if (Stage == 3) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 60))
+				{
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
+				}
+
+				//左
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+					(player.image.y > 83 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				//右
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				else {
+					player.image.y--;
+					breakplayer.image.y = player.image.y;
+				}
+			}
 		}
 	}
 
@@ -1086,7 +1140,7 @@ VOID MY_PLAY_PROC(VOID)
 				}
 			}
 
-			if (Stage >= 2) {
+			if (Stage == 2) {
 				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
 					(player.image.y > 446 && player.image.y < 520))
 				{
@@ -1164,6 +1218,58 @@ VOID MY_PLAY_PROC(VOID)
 					breakplayer.image.y = player.image.y;
 				}
 			}
+
+			if (Stage == 3) {
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 60))
+				{
+					/*if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;*/
+				}
+
+				//左
+				else if ((player.image.x > 73 && player.image.x < 349) &&
+					(player.image.y > 83 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				//右
+				else if ((player.image.x > 381 && player.image.x < 643) &&
+					(player.image.y > 83 && player.image.y < 426))
+				{
+					if (CheckSoundMem(BGM.handle) != 0)
+					{
+						StopSoundMem(BGM.handle);
+					}
+
+					GameEndKind = GAME_END_FAIL;
+
+					GameScene = GAME_SCENE_END;
+
+					//player.image.y++;
+				}
+
+				else {
+					player.image.y++;
+					breakplayer.image.y = player.image.y;
+				}
+			}
 		}
 	}
 
@@ -1200,7 +1306,7 @@ VOID MY_PLAY_PROC(VOID)
 			}
 		}
 
-		if (Stage >= 2) {
+		if (Stage == 2) {
 			//プレイヤーから左上
 			if ((player.image.x > 73 && player.image.x < 349) &&
 				(player.image.y > 83 && player.image.y < 210))
@@ -1275,6 +1381,58 @@ VOID MY_PLAY_PROC(VOID)
 					}*/
 			}
 		}
+
+		if (Stage == 3) {
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 60))
+			{
+				/*if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;*/
+			}
+
+			//左
+			else if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 83 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			//右
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			else {
+				player.image.x--;
+				breakplayer.image.x = player.image.x;
+			}
+		}
 	}
 
 	if (MY_KEY_DOWN(KEY_INPUT_RIGHT) == TRUE) {
@@ -1311,7 +1469,7 @@ VOID MY_PLAY_PROC(VOID)
 			}
 		}
 
-		if (Stage >= 2) {
+		if (Stage == 2) {
 			//左上
 			if ((player.image.x > 73 && player.image.x < 349) &&
 				(player.image.y > 83 && player.image.y < 210))
@@ -1386,6 +1544,59 @@ VOID MY_PLAY_PROC(VOID)
 				}*/
 			}
 		}
+
+		if (Stage == 3) {
+			if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+				(player.image.y > 0 && player.image.y < 60))
+			{
+				/*if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;*/
+			}
+
+			//左
+			else if ((player.image.x > 73 && player.image.x < 349) &&
+				(player.image.y > 83 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			//右
+			else if ((player.image.x > 381 && player.image.x < 643) &&
+				(player.image.y > 83 && player.image.y < 426))
+			{
+				if (CheckSoundMem(BGM.handle) != 0)
+				{
+					StopSoundMem(BGM.handle);
+				}
+
+				GameEndKind = GAME_END_FAIL;
+
+				GameScene = GAME_SCENE_END;
+
+				//player.image.y++;
+			}
+
+			else if(player.image.x < 698)
+			{
+				player.image.x++;
+				breakplayer.image.x = player.image.x;
+			}
+		}
 	}
 
 	//ゲームのクリア判定
@@ -1409,8 +1620,26 @@ VOID MY_PLAY_PROC(VOID)
 	}
 
 	//ステージ2
-	if (Stage >= 2) {
+	if (Stage == 2) {
 		if ((e_timeS - n_time) <= 0)
+		{
+			if (CheckSoundMem(BGM.handle) != 0)
+			{
+				StopSoundMem(BGM.handle);
+			}
+
+			//ステージクリアのカウント
+			StageComp++;
+
+			GameEndKind = GAME_END_COMP;
+
+			GameScene = GAME_SCENE_END;
+		}
+	}
+
+	//ステージ3
+	if (Stage >= 3) {
+		if ((e_timeT - n_time) <= 0)
 		{
 			if (CheckSoundMem(BGM.handle) != 0)
 			{
@@ -1484,7 +1713,7 @@ VOID MY_PLAY_PROC(VOID)
 			}
 		}
 
-		if (Stage >= 2) {
+		if (Stage == 2) {
 			//左上
 			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
 				(enemy.image.y > 83 && enemy.image.y < 210))
@@ -1563,6 +1792,50 @@ VOID MY_PLAY_PROC(VOID)
 				}*/
 			}
 		}
+
+		if (Stage >= 3) {
+			//左
+			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
+			}
+
+			//右
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 420)
+				{
+					enemy.image.x = 430;
+				}
+			}
+
+			else if (enemy.image.x < 698)
+			{
+				enemy.image.x++;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 68))
+				{
+
+				}
+				else {
+					player.image.y--;
+				}*/
+			}
+		}
 	}
 
 	//左
@@ -1596,7 +1869,7 @@ VOID MY_PLAY_PROC(VOID)
 			}
 		}
 
-		if (Stage >= 2) {
+		if (Stage == 2) {
 			//左上
 			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
 				(enemy.image.y > 83 && enemy.image.y < 210))
@@ -1666,6 +1939,50 @@ VOID MY_PLAY_PROC(VOID)
 				}*/
 			}
 		}
+
+		if (Stage >= 3) {
+			//左
+			if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 80)
+				{
+					enemy.image.x = 72;
+				}
+				else if (enemy.image.x > 340)
+				{
+					enemy.image.x = 351;
+				}
+			}
+
+			//右
+			else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+				(enemy.image.y > 83 && enemy.image.y < 426))
+			{
+				if (enemy.image.x < 390)
+				{
+					enemy.image.x = 380;
+				}
+				else if (enemy.image.x > 420)
+				{
+					enemy.image.x = 430;
+				}
+			}
+
+			else if (enemy.image.x > 41)
+			{
+				enemy.image.x--;
+				/*breakplayer.image.x = player.image.x;
+				if ((player.image.x > 0 && player.image.x < GAME_WIDTH) &&
+					(player.image.y > 0 && player.image.y < 70))
+				{
+
+				}
+				else {
+					player.image.x--;
+				}*/
+			}
+		}
 	}
 
 	//上
@@ -1699,7 +2016,7 @@ VOID MY_PLAY_PROC(VOID)
 				}
 			}
 
-			if (Stage >= 2) {
+			if (Stage == 2) {
 				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
 					(enemy.image.y > 0 && enemy.image.y < 60))
 				{
@@ -1763,6 +2080,48 @@ VOID MY_PLAY_PROC(VOID)
 						enemy.image.y = 430;
 					}
 				}
+				else {
+					enemy.image.y--;
+				}
+			}
+
+			if (Stage >= 3) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 0 && enemy.image.y < 60))
+				{
+					if (enemy.image.y < 60)
+					{
+						enemy.image.y = 61;
+					}
+				}
+				//左
+				if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
+				//右
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
 				else {
 					enemy.image.y--;
 				}
@@ -1802,7 +2161,7 @@ VOID MY_PLAY_PROC(VOID)
 				}
 			}
 
-			if (Stage >= 2) {
+			if (Stage == 2) {
 				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
 					(enemy.image.y > 446 && enemy.image.y < 520))
 				{
@@ -1866,6 +2225,49 @@ VOID MY_PLAY_PROC(VOID)
 						enemy.image.y = 430;
 					}
 				}
+				else {
+					enemy.image.y++;
+					//breakenemy.image.y = enemy.image.y;
+				}
+			}
+
+			if (Stage >= 3) {
+				if ((enemy.image.x > 0 && enemy.image.x < GAME_WIDTH) &&
+					(enemy.image.y > 0 && enemy.image.y < 60))
+				{
+					if (enemy.image.y < 60)
+					{
+						enemy.image.y = 61;
+					}
+				}
+				//左
+				if ((enemy.image.x > 73 && enemy.image.x < 349) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
+				//右
+				else if ((enemy.image.x > 381 && enemy.image.x < 643) &&
+					(enemy.image.y > 83 && enemy.image.y < 426))
+				{
+					if (enemy.image.y < 90)
+					{
+						enemy.image.y = 80;
+					}
+					else if (enemy.image.y > 420)
+					{
+						enemy.image.y = 430;
+					}
+				}
+
 				else {
 					enemy.image.y++;
 					//breakenemy.image.y = enemy.image.y;
@@ -1957,21 +2359,9 @@ VOID MY_PLAY_DRAW(VOID)
 		}
 	}
 
-
-
-	//プレイヤーの描画
-	DrawGraph(player.image.x, player.image.y, player.image.handle, TRUE);
-
-	//敵の描画
-	DrawGraph(enemy.image.x, enemy.image.y, enemy.image.handle, TRUE);
-
-	//画面遷移
-	//DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
-
 	//時間の表示
-
 	//ステージ1
-	if (Stage == 1){
+	if (Stage == 1) {
 		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeF - n_time);
 	}
 
@@ -1981,9 +2371,23 @@ VOID MY_PLAY_DRAW(VOID)
 	}
 
 	//ステージ3
-	if (Stage >= 3) {
-		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeS - n_time);
+	if (Stage == 3) {
+		DrawFormatStringToHandle(0, 20, GetColor(255, 255, 255), FontHandle, "残り時間:%d", e_timeT - n_time);
+
+		//仕掛けの描画
+		trap.image.handle = LoadGraph(".//IMAGE/yazirushi2.png");
+		DrawGraph(375, 65, trap.image.handle, TRUE);
+		DrawGraph(375, 450, trap.image.handle, TRUE);
 	}
+
+	//プレイヤーの描画
+	DrawGraph(player.image.x, player.image.y, player.image.handle, TRUE);
+
+	//敵の描画
+	DrawGraph(enemy.image.x, enemy.image.y, enemy.image.handle, TRUE);
+
+	//画面遷移
+	//DrawString(0, 0, "プレイ画面(スペースキーを押して下さい)", GetColor(255, 255, 255));
 
 	return;
 }
